@@ -44,4 +44,5 @@ public class MyArtist {
     public void setId(String id) {
         mId = id;
     }
+
 }

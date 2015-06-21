@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //Variables for the adapter
@@ -66,7 +67,7 @@ public class MainActivityFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     String searchString = textView.getText().toString();
-                    if (searchString != null && searchString != "" && searchString.toLowerCase() != prevSearch) {
+                    if (!searchString.isEmpty() && !(searchString.toLowerCase().equals(prevSearch))) {
                         if (mArtist != null) {
                             mArtist.clear();
                         }
@@ -116,13 +117,15 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (mArtist != null) {
+            if (!mArtist.isEmpty()) {
                 if (mListView.getAdapter() == null) {
                     mArtistAdapter = new ArtistAdapter(mListView.getContext(), mArtist);
                     mListView.setAdapter(mArtistAdapter);
                 } else {
                     mArtistAdapter.notifyDataSetChanged();
                 }
+            } else {
+                Toast.makeText(getActivity(), "No artist was found.\nPlease refine your query.", Toast.LENGTH_SHORT).show();
             }
         }
     }
